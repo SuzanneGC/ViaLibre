@@ -37,7 +37,7 @@ fun ButtonVL(
 @Preview(showBackground = true)
 @Composable
 fun PreviewButtonVL() {
-    ViaLibreTheme(darkTheme = false, dynamicColor = false) {
+    ViaLibreTheme(darkTheme = true, dynamicColor = false) {
         Surface(
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background // ou n’importe quelle couleur

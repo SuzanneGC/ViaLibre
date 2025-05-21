@@ -26,6 +26,8 @@ private val DarkColorScheme = darkColorScheme(
     tertiary = ClairViolet,
     onTertiary = ClairViolet,
 
+    surfaceContainer = BleuSombre,
+
     surfaceBright = BleuSombre,
     surfaceDim = ClairBleu,
     surfaceVariant = VioletHeader
@@ -38,14 +40,16 @@ private val LightColorScheme = lightColorScheme(
     onPrimary = VioletFonce,
 
     secondary = VioletClair,
-    secondaryContainer = VioletFonce,
+    secondaryContainer = VertClair,
     onSecondary = VioletClair,
 
     tertiary = VioletMix,
     onTertiary = VioletMix,
 
+    surfaceContainer = VioletClair,
+
     surfaceBright = VertSature,
-    surfaceDim = VioletClair,
+    surfaceDim = VertClair,
     surfaceVariant = VioletMenu
 )
 
