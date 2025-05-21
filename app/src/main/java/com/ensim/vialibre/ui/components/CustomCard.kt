@@ -61,20 +61,19 @@ fun CustomCard(
                 ) {
                     Text(
                         text = description,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onSecondary,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.align(Alignment.CenterStart)
+                            .padding(start = 12.dp,end = (-88).dp)
                     )
                 }
 
                 // Image carrée superposée à droite
-                Image(
+                SquareCenteredImage(
                     painter = image,
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .clip(RoundedCornerShape(12.dp))
+                        .size(80.dp) // ou toute autre taille
                 )
             }
         }
@@ -88,9 +87,32 @@ fun PreviewCustomCard() {
     ViaLibreTheme(darkTheme = true, dynamicColor = false) {
         CustomCard(
             title = "Ma Carte",
-            description = "Texte sur la bande du bas",
+            description = "Texte sur la bande du bas" +
+                    "" +
+                    "",
             image = painterResource(id = R.drawable.furet), // remplace avec ton image
             modifier = Modifier.padding(16.dp)
         )
     }
 }
+
+@Composable
+fun SquareCenteredImage(
+    painter: Painter,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            .aspectRatio(1f) // Force un carré, quelle que soit la taille disponible
+            .clip(RoundedCornerShape(12.dp)) // Optionnel : coins arrondis
+            .background(MaterialTheme.colorScheme.surfaceVariant) // Optionnel : fond
+    ) {
+        Image(
+            painter = painter,
+            contentDescription = null,
+            contentScale = ContentScale.Crop, // Centre + remplit
+            modifier = Modifier.fillMaxSize()
+        )
+    }
+}
+

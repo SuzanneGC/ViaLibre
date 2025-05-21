@@ -17,7 +17,7 @@ private val DarkColorScheme = darkColorScheme(
     background = VioletSombre,
 
     primary = ClairViolet,
-    onPrimary = ClairViolet,
+    onPrimary = VioletSombre,
 
     secondary = ClairBleu,
     secondaryContainer = BleuSombre,
