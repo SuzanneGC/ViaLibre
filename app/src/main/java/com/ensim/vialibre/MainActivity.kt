@@ -38,10 +38,10 @@ class MainActivity : ComponentActivity() {
                         val logoPainter = painterResource(id = R.drawable.logovl)
                         HeaderBar(
                             logo = logoPainter,
-                            onMenuClick = {
+                            /*onMenuClick = {
                                 // Action menu (ici un Toast pour l'exemple)
                                 Toast.makeText(this, "Menu clicked", Toast.LENGTH_SHORT).show()
-                            }
+                            }*/
                         )
                     }
                 ) { innerPadding ->

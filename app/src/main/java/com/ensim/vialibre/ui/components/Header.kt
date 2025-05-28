@@ -1,5 +1,6 @@
 package com.ensim.vialibre.ui.components
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,10 +29,11 @@ import com.ensim.vialibre.ui.theme.ViaLibreTheme
 
 @Composable
 fun HeaderBar(
-    onMenuClick: () -> Unit,
+    //onMenuClick: () -> Unit,
     logo: Painter,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -51,7 +54,10 @@ fun HeaderBar(
 
         // Icône menu à droite
         IconButton(
-            onClick = onMenuClick,
+            onClick = {
+                Toast.makeText(context, "Menu cliqué !", Toast.LENGTH_SHORT).show()
+                // Ou toute autre action ici
+            },
             modifier = Modifier
                 .align(Alignment.CenterEnd)
                 .padding(end = 16.dp)
@@ -71,7 +77,7 @@ fun HeaderBar(
 fun HeaderBarPreview() {
     ViaLibreTheme(darkTheme = true, dynamicColor = false) {
         HeaderBar(
-            onMenuClick = { /* menu click preview */ },
+            //onMenuClick = { /* menu click preview */ },
             logo = painterResource(id = R.drawable.logovl) // remplace par ton logo
         )
     }
