@@ -48,31 +48,24 @@ fun CustomCard(
                 )
             }
 
-            // Bande basse avec texte + image superposée
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-            ) {
-                // Texte sur la bande
-                Box(
-                    modifier = Modifier
-                        .matchParentSize()
-                        .background(MaterialTheme.colorScheme.surfaceDim)
-                ) {
+                    .background(MaterialTheme.colorScheme.surfaceDim),
+                verticalAlignment = Alignment.CenterVertically
+            )  {
                     Text(
                         text = description,
                         color = MaterialTheme.colorScheme.onSecondary,
                         style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                            .padding(start = 12.dp,end = (-88).dp)
+                        modifier = Modifier
+                            .weight(1f).padding(12.dp)
                     )
-                }
 
                 // Image carrée superposée à droite
                 SquareCenteredImage(
                     painter = image,
                     modifier = Modifier
-                        .align(Alignment.CenterEnd)
                         .size(80.dp) // ou toute autre taille
                 )
             }
@@ -103,8 +96,7 @@ fun SquareCenteredImage(
 ) {
     Box(
         modifier = modifier
-            .aspectRatio(1f) // Force un carré, quelle que soit la taille disponible
-            .clip(RoundedCornerShape(12.dp)) // Optionnel : coins arrondis
+            .aspectRatio(1f)
             .background(MaterialTheme.colorScheme.surfaceVariant) // Optionnel : fond
     ) {
         Image(

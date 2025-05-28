@@ -1,10 +1,24 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
+    //id("com.android.application")
+    id("com.google.gms.google-services")
 
 }
+
+
+val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val apikeyProperties = Properties()
+if (apikeyPropertiesFile.exists()) {
+    apikeyProperties.load(FileInputStream(apikeyPropertiesFile))
+}
+val mapsApiKey: String = apikeyProperties.getProperty("MAPS_API_KEY", "")
+
 
 android {
     namespace = "com.ensim.vialibre"
@@ -16,7 +30,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
-
+        manifestPlaceholders["MAPS_API_KEY"] = mapsApiKey
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -43,6 +57,12 @@ android {
 
 dependencies {
 
+    implementation(platform("com.google.firebase:firebase-bom:33.13.0"))
+    implementation("com.google.firebase:firebase-analytics")
+
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
     val navVersion = "2.8.9"
     // navigation
     implementation("androidx.navigation:navigation-compose:$navVersion")
@@ -79,4 +99,15 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    //Pour afficher une carte
+    //implementation(libs.maps.compose)
+    //implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+    implementation(libs.kotlinx.coroutines.play.services)
+    implementation(libs.accompanist.permissions.v0315beta)
+    implementation(libs.maps.compose.v2113)
+    implementation(libs.play.services.maps.v1810)
+
+
 }

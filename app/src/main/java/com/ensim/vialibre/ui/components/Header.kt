@@ -3,9 +3,12 @@ package com.ensim.vialibre.ui.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
@@ -31,7 +34,8 @@ fun HeaderBar(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
+            .height(100.dp)
+            .padding(top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding())
             .background(MaterialTheme.colorScheme.background),
     ) {
         // Logo à gauche
