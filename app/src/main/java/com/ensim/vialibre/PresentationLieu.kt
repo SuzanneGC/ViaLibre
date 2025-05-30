@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
@@ -26,11 +28,18 @@ import com.ensim.vialibre.ui.components.ButtonVL
 import com.ensim.vialibre.ui.components.CustomCard
 import com.ensim.vialibre.ui.components.HeaderBar
 import com.ensim.vialibre.ui.components.Menu
+import com.ensim.vialibre.ui.components.Titres
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 
-class MainActivity : ComponentActivity() {
+class PresentationLieu : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val name = intent.getStringExtra("name") ?: "nom inconnu"
+        val address = intent.getStringExtra("address") ?: "adresse inconnue"
+        val photo = intent.getStringExtra("photoRef")
+
         enableEdgeToEdge()
         setContent {
             ViaLibreTheme(dynamicColor = false) {
@@ -57,24 +66,21 @@ class MainActivity : ComponentActivity() {
                             verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             CustomCard(
-                                title = "Ma Carte",
-                                description = "Texte sur la bande du bas",
+                                title = name,
+                                description = address,
                                 image = null,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),
-                                targetActivity = PresentationLieu::class.java
+                                targetActivity = MainActivity::class.java
                             )
 
-                            Text("Contenu principal")
+                            Divider(
+                                color = MaterialTheme.colorScheme.primary,
+                                thickness = 1.dp,
+                                modifier = Modifier.padding(horizontal = 16.dp))
 
-                            ButtonVL(
-                                text = "Confirmer",
-                                onClick = {
-                                    val intent = Intent(context, AffichageCarte::class.java)
-                                    context.startActivity(intent)
-                                }
-                            )
+                            Titres("Presentation du lieu")
                         }
 
                     }
@@ -89,5 +95,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-

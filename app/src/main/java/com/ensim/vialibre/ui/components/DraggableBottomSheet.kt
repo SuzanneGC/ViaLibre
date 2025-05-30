@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -34,8 +36,10 @@ import kotlinx.coroutines.launch
 fun DraggableBottomSheet(
     modifier: Modifier = Modifier,
     sheetContent: @Composable () -> Unit,
-    content: @Composable () -> Unit
-) {
+    content: @Composable () -> Unit,
+    onSearchSubmit:(String)-> Unit,
+
+    ) {
     val scope = rememberCoroutineScope()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val maxHeightPx = with(LocalDensity.current) { screenHeight.toPx() }
@@ -43,6 +47,10 @@ fun DraggableBottomSheet(
     val maxSheetHeightPx = maxHeightPx * 1f // hauteur quand étendue (80%)
 
     val offsetY = remember { Animatable(maxSheetHeightPx - minSheetHeightPx) }
+
+    val sampleItems = listOf("Carte 1", "Carte 2", "Carte 3", "Carte 4", "Carte 5", "Carte 6")
+
+    var query by remember { mutableStateOf("") }
 
     Box(modifier.fillMaxSize()) {
         content()
@@ -83,17 +91,13 @@ fun DraggableBottomSheet(
 
                 SearchBar(
                     query = searchQuery,
-                    onQueryChange = { searchQuery = it }
+                    onQueryChange = {searchQuery = it},
+                    onSearchSubmit = onSearchSubmit,
+                    modifier = Modifier.fillMaxWidth().height(56.dp)
                 )
 
-                CustomCard(
-                    title = "Ma Carte",
-                    description = "Texte sur la bande du bas",
-                    image = painterResource(id = R.drawable.furet),
-                    modifier = Modifier.fillMaxWidth()
-                        .wrapContentHeight(),
-
-                    )
+                Text("On passe à la liste !")
+                CustomCardList(items = sampleItems)
 
             }
 
