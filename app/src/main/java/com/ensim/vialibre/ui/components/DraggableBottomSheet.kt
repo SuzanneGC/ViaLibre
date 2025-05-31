@@ -11,8 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,10 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import com.ensim.vialibre.R
+import com.ensim.vialibre.domain.Lieu
 import kotlinx.coroutines.launch
 
 @Composable
@@ -37,7 +34,7 @@ fun DraggableBottomSheet(
     modifier: Modifier = Modifier,
     sheetContent: @Composable () -> Unit,
     content: @Composable () -> Unit,
-    onSearchSubmit:(String)-> Unit,
+    onSearchSubmit: suspend (String) -> List<Lieu>?,
 
     ) {
     val scope = rememberCoroutineScope()
@@ -48,9 +45,10 @@ fun DraggableBottomSheet(
 
     val offsetY = remember { Animatable(maxSheetHeightPx - minSheetHeightPx) }
 
-    val sampleItems = listOf("Carte 1", "Carte 2", "Carte 3", "Carte 4", "Carte 5", "Carte 6")
-
     var query by remember { mutableStateOf("") }
+    var searchQuery by remember { mutableStateOf("") }
+    var searchResult by remember { mutableStateOf<List<Lieu>?>(null) }
+    var hasSearched by remember { mutableStateOf(false) }
 
     Box(modifier.fillMaxSize()) {
         content()
@@ -60,7 +58,10 @@ fun DraggableBottomSheet(
                 .fillMaxWidth()
                 .height(with(LocalDensity.current) { maxSheetHeightPx.toDp() })
                 .offset { IntOffset(x = 0, y = offsetY.value.toInt()) }
-                .background(MaterialTheme.colorScheme.background, shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
+                .background(
+                    MaterialTheme.colorScheme.background,
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                )
                 .pointerInput(Unit) {
                     detectVerticalDragGestures(
                         onDragEnd = {
@@ -75,7 +76,10 @@ fun DraggableBottomSheet(
                         }
                     ) { change, dragAmount ->
                         change.consume()
-                        val newOffset = (offsetY.value + dragAmount).coerceIn(0f, maxSheetHeightPx - minSheetHeightPx)
+                        val newOffset = (offsetY.value + dragAmount).coerceIn(
+                            0f,
+                            maxSheetHeightPx - minSheetHeightPx
+                        )
                         scope.launch { offsetY.snapTo(newOffset) }
                     }
                 }
@@ -86,18 +90,35 @@ fun DraggableBottomSheet(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-
-                var searchQuery by remember { mutableStateOf("") }
-
                 SearchBar(
                     query = searchQuery,
-                    onQueryChange = {searchQuery = it},
-                    onSearchSubmit = onSearchSubmit,
-                    modifier = Modifier.fillMaxWidth().height(56.dp)
+                    onQueryChange = { searchQuery = it },
+                    onSearchSubmit = { query ->
+                        hasSearched = true
+                        scope.launch {
+                            val result = onSearchSubmit(query)
+                            searchResult = result
+                        }
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
                 )
 
-                Text("On passe à la liste !")
-                CustomCardList(items = sampleItems)
+                Titres("Résultats :")
+
+                if (!hasSearched) {
+                    Text("Aucun résultat pour le moment :( Essayez de chercher un lieu !",
+                        color = MaterialTheme.colorScheme.primary)
+                } else {
+                    if (searchResult != null)
+                        CustomCardList(items = searchResult!!)
+                    else {
+                        Text("Oups, aucun lieu trouvé ! Veuillez réessayer",
+                            color = MaterialTheme.colorScheme.primary))
+                    }
+                }
 
             }
 

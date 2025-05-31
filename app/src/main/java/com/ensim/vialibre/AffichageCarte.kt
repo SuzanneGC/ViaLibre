@@ -111,37 +111,15 @@ class AffichageCarte : ComponentActivity() {
                         }
                     ) { innerPadding ->
                         DraggableBottomSheet(
-                            onSearchSubmit = {query ->
+                            onSearchSubmit = { query ->
                                 val placesClient = Places.createClient(context)
                                 val repository = LieuRepositoryImpl(placesClient)
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    val lieu = repository.searchLieuByName(query)
-                                    lieu?.let{
-                                        val intent = Intent(context, PresentationLieu::class.java).apply {
-                                            putExtra("name",it.name)
-                                            putExtra("address", it.address)
-                                            putExtra("photoRef", it.photoReference)
-                                        }
-                                        context.startActivity(intent)
-
-                                    }
-
-                                }
-
+                                repository.searchLieuByName(query)
                             },
-
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize(),
-                            sheetContent = {
-                                // Contenu de la feuille draggable, par exemple :
-                                Text(
-                                    "Informations complémentaires",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    modifier = Modifier.padding(16.dp)
-                                )
-                                // Tu peux mettre plus de contenu ici...
-                            },
+                            sheetContent = {},
                             content = {
                                 UserMapView(
                                     userLocation = userLocation.value,

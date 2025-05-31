@@ -13,10 +13,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.PresentationLieu
 import com.ensim.vialibre.R
+import com.ensim.vialibre.domain.Lieu
 
 @Composable
 fun CustomCardList(
-    items: List<String>,
+    items: List<Lieu>,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -26,9 +27,9 @@ fun CustomCardList(
     ){
         items(items){item ->
             CustomCard(
-                title = item,
-                description = "Texte sur la bande du bas",
-                image = null,
+                title = item.name,
+                description = item.address,
+                image = item.photoReference,
                 modifier = Modifier.fillMaxWidth()
                     .wrapContentHeight(),
                 targetActivity = PresentationLieu::class.java

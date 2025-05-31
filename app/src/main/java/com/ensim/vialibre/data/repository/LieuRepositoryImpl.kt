@@ -12,36 +12,45 @@ import kotlinx.coroutines.withContext
 
 class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepository {
 
-    override suspend fun searchLieuByName(name: String): Lieu? = withContext(Dispatchers.IO) {
+    override suspend fun searchLieuByName(name: String): List<Lieu>? = withContext(Dispatchers.IO) {
         val TAG = "SearchLieuByName"
         Log.d(TAG, "méthode appelée")
+        val lieux = mutableListOf<Lieu>()
         val request = FindAutocompletePredictionsRequest.builder()
             .setQuery(name)
             .build()
         try {
             val predictionResponse = placesClient.findAutocompletePredictions(request).await()
+            val predictions = predictionResponse.autocompletePredictions.take(10)
 
-            Log.d(TAG, "Mmmh on a initialisé predictionResponse")
-
-            val placeId = predictionResponse.autocompletePredictions.firstOrNull()?.placeId
+            //val placeId = predictionResponse.autocompletePredictions.firstOrNull()?.placeId
                 ?: return@withContext null
 
             val placeFields =
                 listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS)
-            val placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build()
-            val placeResponse = placesClient.fetchPlace(placeRequest).await()
-            val place = placeResponse.place
 
-            Log.d(TAG, place.name ?: "Inconnu")
-
-            return@withContext Lieu(
-                name = place.name ?: "Inconnu",
-                address = place.address ?: "Adresse inconnue",
-                photoReference = place.photoMetadatas?.firstOrNull()?.zza()
-            )
+            predictions.mapNotNull { prediction ->
+                try {
+                    val placeId = prediction.placeId
+                    val placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build()
+                    val placeResponse = placesClient.fetchPlace(placeRequest).await()
+                    val place = placeResponse.place
+                    lieux.add(
+                        Lieu(
+                            name = place.name ?: "Inconnu",
+                            address = place.address ?: "Adresse inconnue",
+                            photoReference = place.photoMetadatas?.firstOrNull()?.zza()
+                        )
+                    )
+                } catch (e : Exception){
+                    Log.w(TAG, "Woupsiiii ")
+                    null
+                }
+            }
         } catch (e: Exception) {
             Log.e(TAG, "Erreur lors de la requête: ${e.message}", e)
             return@withContext null
         }
+        return@withContext lieux
     }
 }

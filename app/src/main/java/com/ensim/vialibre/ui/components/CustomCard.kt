@@ -42,7 +42,11 @@ fun CustomCard(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                val intent = Intent(context, targetActivity)
+                val intent = Intent(context, targetActivity).apply {
+                    putExtra("name", title)
+                    putExtra("address", description)
+                    putExtra("photoRef", image)
+                }
                 context.startActivity(intent)
             },
         shape = RoundedCornerShape(16.dp),
