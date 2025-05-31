@@ -2,7 +2,9 @@ package com.ensim.vialibre.data.repository
 
 import android.util.Log
 import com.ensim.vialibre.domain.Lieu
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.model.RectangularBounds
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 import com.google.android.libraries.places.api.net.PlacesClient
@@ -12,12 +14,18 @@ import kotlinx.coroutines.withContext
 
 class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepository {
 
-    override suspend fun searchLieuByName(name: String): List<Lieu>? = withContext(Dispatchers.IO) {
+    override suspend fun searchLieuByName(name: String, currentLat:Double,currentLng:Double): List<Lieu>? = withContext(Dispatchers.IO) {
         val TAG = "SearchLieuByName"
         Log.d(TAG, "méthode appelée")
         val lieux = mutableListOf<Lieu>()
         val request = FindAutocompletePredictionsRequest.builder()
             .setQuery(name)
+            .setLocationBias(
+                RectangularBounds.newInstance(
+                    LatLng(currentLat - 0.05, currentLng - 0.05),
+                    LatLng(currentLat + 0.05, currentLng + 0.05)
+                )
+            )
             .build()
         try {
             val predictionResponse = placesClient.findAutocompletePredictions(request).await()

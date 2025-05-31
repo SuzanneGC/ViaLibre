@@ -2,7 +2,6 @@ package com.ensim.vialibre
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -12,10 +11,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,9 +20,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.ensim.vialibre.data.repository.LieuRepositoryImpl
 import com.ensim.vialibre.ui.components.DraggableBottomSheet
 import com.ensim.vialibre.ui.components.HeaderBar
 import com.ensim.vialibre.ui.components.Menu
@@ -36,12 +32,8 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import com.ensim.vialibre.data.repository.LieuRepositoryImpl
-import kotlin.math.log
 
 
 class AffichageCarte : ComponentActivity() {
@@ -70,22 +62,20 @@ class AffichageCarte : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val apiKey = applicationContext
-            .packageManager
-            .getApplicationInfo(packageName, PackageManager.GET_META_DATA)
-            .metaData
-            .getString("com.google.android.geo.API_KEY")
+        val apiKey = applicationContext.packageManager.getApplicationInfo(
+            packageName,
+            PackageManager.GET_META_DATA
+        ).metaData.getString("com.google.android.geo.API_KEY")
 
         Log.d(TAG, "clé : $apiKey")
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         if (apiKey != null) {
-            Places.initialize(applicationContext,apiKey)
+            Places.initialize(applicationContext, apiKey)
         }
         Log.d(TAG, "userLocation.value ${userLocation.value}")
         if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
+                this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             getLastLocation()
@@ -93,28 +83,26 @@ class AffichageCarte : ComponentActivity() {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         setContent {
+
             val context = LocalContext.current
             ViaLibreTheme(dynamicColor = false) {
                 var isMenuOpen by remember { mutableStateOf(false) }
                 Box(modifier = Modifier.fillMaxSize()) {
 
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            val logoPainter = painterResource(id = R.drawable.logovl)
-                            HeaderBar(
-                                logo = logoPainter,
-                                onMenuClick = {
-                                    isMenuOpen = true
-                                }
-                            )
-                        }
-                    ) { innerPadding ->
+                    Scaffold(modifier = Modifier.fillMaxSize(), topBar = {
+                        val logoPainter = painterResource(id = R.drawable.logovl)
+                        HeaderBar(logo = logoPainter, onMenuClick = {
+                            isMenuOpen = true
+                        })
+                    }) { innerPadding ->
                         DraggableBottomSheet(
-                            onSearchSubmit = { query ->
+                            lat = userLocation.value?.latitude?: 48.8566,
+                            lng = userLocation.value?.longitude?: 2.3522,
+
+                            onSearchSubmit = { query, lat, lng ->
                                 val placesClient = Places.createClient(context)
                                 val repository = LieuRepositoryImpl(placesClient)
-                                repository.searchLieuByName(query)
+                                repository.searchLieuByName(query, lat, lng)
                             },
                             modifier = Modifier
                                 .padding(innerPadding)
@@ -156,4 +144,5 @@ class AffichageCarte : ComponentActivity() {
             }
         }
     }
+
 }

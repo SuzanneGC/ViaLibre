@@ -68,7 +68,7 @@ class PresentationLieu : ComponentActivity() {
                             CustomCard(
                                 title = name,
                                 description = address,
-                                image = null,
+                                image = photo,
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight(),

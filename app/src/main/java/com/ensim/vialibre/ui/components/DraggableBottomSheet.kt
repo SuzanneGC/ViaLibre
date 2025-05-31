@@ -1,5 +1,6 @@
 package com.ensim.vialibre.ui.components
 
+import android.location.Location
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -27,6 +28,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.domain.Lieu
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 
 @Composable
@@ -34,8 +36,9 @@ fun DraggableBottomSheet(
     modifier: Modifier = Modifier,
     sheetContent: @Composable () -> Unit,
     content: @Composable () -> Unit,
-    onSearchSubmit: suspend (String) -> List<Lieu>?,
-
+    onSearchSubmit: suspend (query : String, lat : Double, lng : Double) -> List<Lieu>?,
+    lat: Double?,
+    lng:Double?
     ) {
     val scope = rememberCoroutineScope()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
@@ -96,7 +99,7 @@ fun DraggableBottomSheet(
                     onSearchSubmit = { query ->
                         hasSearched = true
                         scope.launch {
-                            val result = onSearchSubmit(query)
+                            val result = onSearchSubmit(query, lat?: 2.3522, lng?: 2.3522)
                             searchResult = result
                         }
 
@@ -116,7 +119,7 @@ fun DraggableBottomSheet(
                         CustomCardList(items = searchResult!!)
                     else {
                         Text("Oups, aucun lieu trouvé ! Veuillez réessayer",
-                            color = MaterialTheme.colorScheme.primary))
+                            color = MaterialTheme.colorScheme.primary)
                     }
                 }
 
