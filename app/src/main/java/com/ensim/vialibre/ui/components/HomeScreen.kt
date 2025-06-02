@@ -19,22 +19,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.AffichageCarte
 import com.ensim.vialibre.PresentationLieu
-import com.ensim.vialibre.data.repository.Place
-import com.ensim.vialibre.data.repository.getPlaceById
 
 @Composable
 fun HomeScreen(onLogout: () -> Unit, context: Context) {
-
-    var place by remember { mutableStateOf<Place?>(null) }
-    var placeId : String = "xNa4tbMCDVxj8P1tlyRh"
-
-    LaunchedEffect(placeId) {
-        getPlaceById(placeId) {
-            place = it
-        }
-    }
-
-
     Column(
         modifier = Modifier
             .padding(16.dp)
@@ -49,7 +36,7 @@ fun HomeScreen(onLogout: () -> Unit, context: Context) {
                 .fillMaxWidth()
                 .wrapContentHeight(),
             targetActivity = PresentationLieu::class.java,
-            placeId = placeId
+            placeId = ""
         )
 
         Text("Contenu principal")
@@ -61,9 +48,6 @@ fun HomeScreen(onLogout: () -> Unit, context: Context) {
                 context.startActivity(intent)
             }
         )
-
-        Text("Nom du lieu : " + (place?.nom ?: "INCONNU"))
-
 
         Button(onClick = onLogout) {
             Text("Se déconnecter")
