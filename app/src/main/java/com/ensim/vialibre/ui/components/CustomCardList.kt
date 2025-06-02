@@ -1,5 +1,6 @@
 package com.ensim.vialibre.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,6 +25,7 @@ fun CustomCardList(
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         items(items) { item ->
+            Log.d("CardList", "ID : " + item.placeId)
             CustomCard(
                 title = item.name,
                 description = item.address,
@@ -31,7 +33,8 @@ fun CustomCardList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                targetActivity = PresentationLieu::class.java
+                targetActivity = PresentationLieu::class.java,
+                placeId = item.placeId,
 
             )
         }

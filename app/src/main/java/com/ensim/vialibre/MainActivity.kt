@@ -5,15 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,73 +16,61 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.ensim.vialibre.data.model.AuthViewModel
+import com.ensim.vialibre.ui.components.AppNavHost
 import com.ensim.vialibre.ui.components.ButtonVL
-import com.ensim.vialibre.ui.components.CustomCard
 import com.ensim.vialibre.ui.components.HeaderBar
+import com.ensim.vialibre.ui.components.HomeScreen
+import com.ensim.vialibre.ui.components.Login
 import com.ensim.vialibre.ui.components.Menu
+import com.ensim.vialibre.ui.components.isUserLoggedIn
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        FirebaseApp.initializeApp(this)
+
         enableEdgeToEdge()
         setContent {
             ViaLibreTheme(dynamicColor = false) {
-                var isMenuOpen by remember { mutableStateOf(false) }
+
                 val context = LocalContext.current
-                Box(modifier = Modifier.fillMaxSize()) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            val logoPainter = painterResource(id = R.drawable.logovl)
-                            HeaderBar(
-                                logo = logoPainter,
-                                onMenuClick = {
-                                    isMenuOpen = true
-                                }
-                            )
-                        }
-                    ) { innerPadding ->
-                        Column(
-                            modifier = Modifier
-                                .padding(innerPadding)
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
-                        ) {
-                            CustomCard(
-                                title = "Ma Carte",
-                                description = "Texte sur la bande du bas",
-                                image = null,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight(),
-                                targetActivity = PresentationLieu::class.java
-                            )
+                val navController = rememberNavController()
+                var isMenuOpen by remember { mutableStateOf(false) }
+                val authViewModel: AuthViewModel = viewModel()
 
-                            Text("Contenu principal")
-
-                            ButtonVL(
-                                text = "Confirmer",
-                                onClick = {
-                                    val intent = Intent(context, AffichageCarte::class.java)
-                                    context.startActivity(intent)
-                                }
-                            )
-                        }
-
+                Scaffold(
+                    topBar = {
+                        HeaderBar(
+                            logo = painterResource(id = R.drawable.logovl),
+                            onMenuClick = { isMenuOpen = true }
+                        )
                     }
-                }
-                if (isMenuOpen) {
-                    Menu(
-                        isMenuOpen = true,
-                        onCloseMenu = { isMenuOpen = false },
-                    )
+                ) { innerPadding ->
+                    Box(modifier = Modifier.padding(innerPadding)) {
+                        AppNavHost(
+                            navController = navController,
+                            onMenuClick = { isMenuOpen = true },
+                            context = context
+                        )
+
+                        if (isMenuOpen) {
+                            Menu(
+                                isMenuOpen = true,
+                                onCloseMenu = { isMenuOpen = false },
+                                authViewModel = authViewModel,
+                                navController = navController
+                            )
+                        }
+                    }
                 }
             }
         }
     }
 }
-
-

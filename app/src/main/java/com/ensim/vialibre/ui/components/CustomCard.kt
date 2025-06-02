@@ -36,6 +36,7 @@ fun CustomCard(
     image: String?,
     modifier: Modifier = Modifier,
     targetActivity: Class<*>,
+    placeId: String?
 ) {
     val context = LocalContext.current
     Card(
@@ -46,6 +47,7 @@ fun CustomCard(
                     putExtra("name", title)
                     putExtra("address", description)
                     putExtra("photoRef", image)
+                    putExtra("placeId", placeId)
                 }
                 context.startActivity(intent)
             },

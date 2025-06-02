@@ -64,8 +64,10 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.places)
+    //implementation(libs.androidx.navigation.compose.jvmstubs)
     val navVersion = "2.8.9"
     // navigation
+
     implementation("androidx.navigation:navigation-compose:$navVersion")
     implementation("androidx.navigation:navigation-fragment:$navVersion")
     implementation("androidx.navigation:navigation-ui:$navVersion")
@@ -102,13 +104,24 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     //Pour afficher une carte
-    //implementation(libs.maps.compose)
-    //implementation(libs.play.services.maps)
     implementation(libs.play.services.location)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.accompanist.permissions.v0315beta)
     implementation(libs.maps.compose.v2113)
     implementation(libs.play.services.maps.v1810)
+
+    //Authentification
+    // Import the BoM for the Firebase platform
+    implementation(platform(libs.google.firebase.bom))
+
+    // Add the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation(libs.firebase.auth)
+
+    //Base de données
+    implementation(libs.firebase.firestore.ktx)
+
+
 
 
 }

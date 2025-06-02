@@ -31,11 +31,8 @@ class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepositor
             val predictionResponse = placesClient.findAutocompletePredictions(request).await()
             val predictions = predictionResponse.autocompletePredictions.take(10)
 
-            //val placeId = predictionResponse.autocompletePredictions.firstOrNull()?.placeId
-                ?: return@withContext null
-
             val placeFields =
-                listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS)
+                listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS, Place.Field.ID)
 
             predictions.mapNotNull { prediction ->
                 try {
@@ -43,11 +40,13 @@ class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepositor
                     val placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build()
                     val placeResponse = placesClient.fetchPlace(placeRequest).await()
                     val place = placeResponse.place
+                    Log.d(TAG, place.id?:"Pas d'id")
                     lieux.add(
                         Lieu(
                             name = place.name ?: "Inconnu",
                             address = place.address ?: "Adresse inconnue",
-                            photoReference = place.photoMetadatas?.firstOrNull()?.zza()
+                            photoReference = place.photoMetadatas?.firstOrNull()?.zza(),
+                            placeId = place.id?:""
                         )
                     )
                 } catch (e : Exception){

@@ -22,6 +22,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.rememberNavController
+import com.ensim.vialibre.data.model.AuthViewModel
 import com.ensim.vialibre.data.repository.LieuRepositoryImpl
 import com.ensim.vialibre.ui.components.DraggableBottomSheet
 import com.ensim.vialibre.ui.components.HeaderBar
@@ -83,6 +86,8 @@ class AffichageCarte : ComponentActivity() {
             requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
         setContent {
+            val authViewModel: AuthViewModel = viewModel()
+            val navController = rememberNavController()
 
             val context = LocalContext.current
             ViaLibreTheme(dynamicColor = false) {
@@ -125,6 +130,9 @@ class AffichageCarte : ComponentActivity() {
                     Menu(
                         isMenuOpen = true,
                         onCloseMenu = { isMenuOpen = false },
+                        authViewModel = authViewModel,
+                        navController = navController
+
                     )
                 }
             }
