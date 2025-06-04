@@ -6,10 +6,14 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -17,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,32 +34,30 @@ import com.ensim.vialibre.data.model.AuthViewModel
 import com.ensim.vialibre.data.model.SettingsViewModel
 import com.ensim.vialibre.data.model.ThemeViewModel
 import com.ensim.vialibre.data.repository.Avis
+import com.ensim.vialibre.data.repository.LieuRepositoryImpl
 import com.ensim.vialibre.data.repository.SettingsRepository
+import com.ensim.vialibre.data.repository.getAllAvisUser
+import com.ensim.vialibre.data.repository.getFavorisByUser
 import com.ensim.vialibre.data.repository.getLastAvisById
 import com.ensim.vialibre.data.utils.getLatLngFromPlaceId
+import com.ensim.vialibre.domain.Lieu
+import com.ensim.vialibre.ui.components.CustomCardList
 import com.ensim.vialibre.ui.components.HeaderBar
 import com.ensim.vialibre.ui.components.Menu
+import com.ensim.vialibre.ui.components.Titres
 import com.ensim.vialibre.ui.screens.ScreenCarousel
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.libraries.places.api.Places
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class PresentationLieu : ComponentActivity() {
-
+class FavorisActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val name = intent.getStringExtra("name") ?: "nom inconnu"
-        val address = intent.getStringExtra("address") ?: "adresse inconnue"
-        val photo = intent.getStringExtra("photoRef")
-
-        val placeId = intent.getStringExtra("placeId")
-
-        val TAG = "PresentationLieu"
-
-        Log.d(TAG, "placeID initialisé : $placeId")
-
 
         enableEdgeToEdge()
         setContent {
@@ -70,7 +73,7 @@ class PresentationLieu : ComponentActivity() {
 
             val viewModel: ThemeViewModel = viewModel()
             val appTheme by viewModel.theme.collectAsState()
-            
+
             ViaLibreTheme(
                 dynamicColor = false, fontSizeScale = fontSizeScale, appTheme = appTheme
             ) {
@@ -79,26 +82,46 @@ class PresentationLieu : ComponentActivity() {
                 val navController = rememberNavController()
                 val authViewModel: AuthViewModel = viewModel()
 
-                var avis by remember { mutableStateOf<List<Avis>>(emptyList()) }
-                var lastAvis by remember { mutableStateOf<Avis?>(null) }
-
+                var favoris by remember { mutableStateOf<List<String>?>(null) }
                 val context = LocalContext.current
 
-                val latLngState = remember { mutableStateOf<LatLng?>(null) }
-                val coroutineScope = rememberCoroutineScope()
+                val lieuxState = remember { mutableStateOf<List<Lieu>>(emptyList()) }
 
-                LaunchedEffect(placeId) {
-                    Log.d(TAG, "Lancement")
+                val userId = FirebaseAuth.getInstance().currentUser?.uid
+
+                val placesClient = Places.createClient(context)
+
+                val lieuRepository = LieuRepositoryImpl(
+                    placesClient = placesClient
+                )
+
+                val isLoading = remember { mutableStateOf(true) }
+
+                LaunchedEffect(userId) {
                     try {
-                        lastAvis = getLastAvisById(placeId ?: "")
-                        Log.d("LastAvis", "Avis reçu : $lastAvis")
-                        coroutineScope.launch(Dispatchers.IO) {
-                            val latLng = placeId?.let { getLatLngFromPlaceId(context, it) }
-                            latLngState.value = latLng
+                        getFavorisByUser(userId ?: "") { favorisList ->
+                            favoris = favorisList
+
+                            CoroutineScope(Dispatchers.IO).launch {
+                                val lieux = favorisList.mapNotNull { favori ->
+                                    try {
+                                        lieuRepository.searchLieuById(favori)
+                                    } catch (e: Exception) {
+                                        Log.e("LieuLoad", "Erreur récupération lieu pour $favori", e)
+                                        null
+                                    }
+                                }
+
+                                withContext(Dispatchers.Main) {
+                                    lieuxState.value = lieux
+                                    isLoading.value = false
+                                }
+                            }
                         }
-                    } catch (e: Exception) {
-                        Log.e(TAG, "Erreur récupération avis", e)
-                        avis = emptyList()
+                    } catch (_: Exception) {
+                        lieuxState.value = emptyList()
+                    } finally {
+                        isLoading.value = false
                     }
                 }
 
@@ -109,19 +132,34 @@ class PresentationLieu : ComponentActivity() {
                             isMenuOpen = true
                         })
                     }) { innerPadding ->
-                        ScreenCarousel(
-                            modifier = Modifier
-                                .padding(innerPadding)
-                                .padding(16.dp)
-                                .fillMaxWidth(),
-                            name = name,
-                            address = address,
-                            photo = photo,
-                            placeId = placeId ?: "",
-                            latLngState = latLngState,
-                            avis = lastAvis
-                        )
 
+                        Column(modifier = Modifier.padding(innerPadding)) {
+                            Titres("Mes favoris")
+                            if (isLoading.value) {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .padding(innerPadding)
+                                        .padding(16.dp),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    CircularProgressIndicator()
+                                }
+                            } else if (lieuxState.value.isEmpty()) {
+                                Text(
+                                    "Vous n'avez pas encore de lieu favori.",
+                                    color = MaterialTheme.colorScheme.primary,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            } else {
+                                CustomCardList(
+                                    items = lieuxState.value,
+                                    modifier = Modifier
+                                        .padding(16.dp)
+                                )
+                            }
+
+                        }
                     }
                 }
                 if (isMenuOpen) {

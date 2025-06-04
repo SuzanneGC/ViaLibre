@@ -26,7 +26,9 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.ensim.vialibre.FavorisActivity
 import com.ensim.vialibre.MainActivity
+import com.ensim.vialibre.MesAvisActivity
 import com.ensim.vialibre.SettingsActivity
 import com.ensim.vialibre.data.model.AuthViewModel
 import kotlin.math.roundToInt
@@ -84,10 +86,12 @@ fun Menu(
                     context.startActivity(intent)
                 }
                 ElementMenu(text = "Lieux favoris") {
-                    Toast.makeText(context, "Profil cliqué", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, FavorisActivity::class.java)
+                    context.startActivity(intent)
                 }
                 ElementMenu(text = "Mes avis") {
-                    Toast.makeText(context, "Mes avis cliqué", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, MesAvisActivity::class.java)
+                    context.startActivity(intent)
                 }
                 ElementMenu(text = "Paramètres") {
                     val intent = Intent(context, SettingsActivity::class.java)

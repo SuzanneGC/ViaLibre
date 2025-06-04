@@ -33,9 +33,11 @@ fun SignUp(onSignUpSuccess: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
+        Titres("S'inscrire'")
+        Spacer(Modifier.padding(16.dp))
+
         TextField(
             value = email,
             onValueChange = { email = it },

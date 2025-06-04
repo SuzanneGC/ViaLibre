@@ -12,20 +12,28 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.PresentationLieu
 import com.ensim.vialibre.R
+import com.ensim.vialibre.data.repository.addFavori
+import com.ensim.vialibre.data.repository.isLieuFavori
+import com.ensim.vialibre.data.repository.removeFavori
+import com.ensim.vialibre.ui.components.ButtonVL
 import com.ensim.vialibre.ui.components.CustomCard
 import com.ensim.vialibre.ui.components.MapCenteredOnPlace
 import com.ensim.vialibre.ui.components.Titres
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
-import androidx.compose.runtime.State
 
 
 @Composable
@@ -82,5 +90,54 @@ fun PresentationScreen(
                 CircularProgressIndicator()
             }
         }
+
+        item {
+            var isFavori by remember { mutableStateOf<Boolean?>(null) }
+
+            LaunchedEffect(placeId) {
+                if (!placeId.isNullOrEmpty()) {
+                    isLieuFavori(placeId) { result ->
+                        isFavori = result
+                    }
+                }
+            }
+
+            when (isFavori) {
+                null -> {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
+                    }
+                }
+
+                true -> {
+                    ButtonVL("Retirer des favoris",
+                        {
+                            if (placeId != null) {
+                                removeFavori(placeId) {
+                                    isFavori = false
+                                }
+                            }
+                        })
+
+                }
+
+                false -> {
+                    ButtonVL("Ajouter aux favoris", {
+                        if (placeId != null) {
+                            addFavori(placeId) {
+                                isFavori = true
+                            }
+                        }
+                    }
+                    )
+                }
+            }
+        }
+
     }
 }

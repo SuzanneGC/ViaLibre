@@ -1,6 +1,5 @@
 package com.ensim.vialibre.data.repository
 
-import android.util.Log
 import com.ensim.vialibre.domain.Lieu
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.model.Place
@@ -14,9 +13,11 @@ import kotlinx.coroutines.withContext
 
 class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepository {
 
-    override suspend fun searchLieuByName(name: String, currentLat:Double,currentLng:Double): List<Lieu>? = withContext(Dispatchers.IO) {
-        val TAG = "SearchLieuByName"
-        Log.d(TAG, "méthode appelée")
+    override suspend fun searchLieuByName(
+        name: String,
+        currentLat: Double,
+        currentLng: Double
+    ): List<Lieu>? = withContext(Dispatchers.IO) {
         val lieux = mutableListOf<Lieu>()
         val request = FindAutocompletePredictionsRequest.builder()
             .setQuery(name)
@@ -32,7 +33,12 @@ class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepositor
             val predictions = predictionResponse.autocompletePredictions.take(10)
 
             val placeFields =
-                listOf(Place.Field.NAME, Place.Field.ADDRESS, Place.Field.PHOTO_METADATAS, Place.Field.ID)
+                listOf(
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.PHOTO_METADATAS,
+                    Place.Field.ID
+                )
 
             predictions.mapNotNull { prediction ->
                 try {
@@ -40,24 +46,49 @@ class LieuRepositoryImpl(private val placesClient: PlacesClient) : LieuRepositor
                     val placeRequest = FetchPlaceRequest.builder(placeId, placeFields).build()
                     val placeResponse = placesClient.fetchPlace(placeRequest).await()
                     val place = placeResponse.place
-                    Log.d(TAG, place.id?:"Pas d'id")
                     lieux.add(
                         Lieu(
                             name = place.name ?: "Inconnu",
                             address = place.address ?: "Adresse inconnue",
                             photoReference = place.photoMetadatas?.firstOrNull()?.zza(),
-                            placeId = place.id?:""
+                            placeId = place.id ?: ""
                         )
                     )
-                } catch (e : Exception){
-                    Log.w(TAG, "Woupsiiii ")
+                } catch (e: Exception) {
                     null
                 }
             }
         } catch (e: Exception) {
-            Log.e(TAG, "Erreur lors de la requête: ${e.message}", e)
             return@withContext null
         }
         return@withContext lieux
+    }
+
+    override suspend fun searchLieuById(placeId: String): Lieu? = withContext(Dispatchers.IO) {
+        val placeFields = listOf(
+            Place.Field.ID,
+            Place.Field.NAME,
+            Place.Field.ADDRESS,
+            Place.Field.LAT_LNG,
+            Place.Field.PHOTO_METADATAS
+        )
+        val request = FetchPlaceRequest.builder(placeId, placeFields).build()
+
+        try {
+            val response = placesClient.fetchPlace(request).await()
+            val place = response.place
+
+            val photoRef =
+                place.photoMetadatas?.firstOrNull()?.zza()
+            return@withContext Lieu(
+                name = place.name ?: "Inconnu",
+                address = place.address ?: "Adresse inconnue",
+                photoReference = place.photoMetadatas?.firstOrNull()?.zza(),
+                placeId = place.id ?: ""
+            )
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 }

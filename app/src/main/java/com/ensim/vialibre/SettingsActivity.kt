@@ -176,14 +176,14 @@ class SettingsActivity : ComponentActivity() {
                         }
                     }
 
-                    if (isMenuOpen) {
-                        Menu(
-                            isMenuOpen = true,
-                            onCloseMenu = { isMenuOpen = false },
-                            authViewModel = authViewModel,
-                            navController = navController
-                        )
-                    }
+                }
+                if (isMenuOpen) {
+                    Menu(
+                        isMenuOpen = true,
+                        onCloseMenu = { isMenuOpen = false },
+                        authViewModel = authViewModel,
+                        navController = navController
+                    )
                 }
             }
         }

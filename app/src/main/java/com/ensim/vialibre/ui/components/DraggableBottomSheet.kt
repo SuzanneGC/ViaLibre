@@ -1,5 +1,6 @@
 package com.ensim.vialibre.ui.components
 
+import android.graphics.Paint.Align
 import android.location.Location
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalConfiguration
@@ -43,7 +46,7 @@ fun DraggableBottomSheet(
     val scope = rememberCoroutineScope()
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     val maxHeightPx = with(LocalDensity.current) { screenHeight.toPx() }
-    val minSheetHeightPx = maxHeightPx * 0.2f // hauteur quand réduite (20%)
+    val minSheetHeightPx = maxHeightPx * 0.20f // hauteur quand réduite (20%)
     val maxSheetHeightPx = maxHeightPx * 1f // hauteur quand étendue (80%)
 
     val offsetY = remember { Animatable(maxSheetHeightPx - minSheetHeightPx) }
@@ -52,6 +55,8 @@ fun DraggableBottomSheet(
     var searchQuery by remember { mutableStateOf("") }
     var searchResult by remember { mutableStateOf<List<Lieu>?>(null) }
     var hasSearched by remember { mutableStateOf(false) }
+
+    val isLoading = remember { mutableStateOf(true) }
 
     Box(modifier.fillMaxSize()) {
         content()
@@ -93,6 +98,9 @@ fun DraggableBottomSheet(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
+
+            RoundedBar(Modifier.align(Alignment.CenterHorizontally).padding(8.dp))
+
                 SearchBar(
                     query = searchQuery,
                     onQueryChange = { searchQuery = it },
@@ -101,6 +109,7 @@ fun DraggableBottomSheet(
                         scope.launch {
                             val result = onSearchSubmit(query, lat?: 2.3522, lng?: 2.3522)
                             searchResult = result
+                            isLoading.value = false
                         }
 
                     },
@@ -115,13 +124,22 @@ fun DraggableBottomSheet(
                     Text("Aucun résultat pour le moment :( Essayez de chercher un lieu !",
                         color = MaterialTheme.colorScheme.primary,
                         style = MaterialTheme.typography.bodyMedium)
-                } else {
+                } else if (isLoading.value == false){
                     if (searchResult != null)
                         CustomCardList(items = searchResult!!)
                     else {
                         Text("Oups, aucun lieu trouvé ! Veuillez réessayer",
                             color = MaterialTheme.colorScheme.primary,
                             style = MaterialTheme.typography.bodyMedium)
+                    }
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                 }
 

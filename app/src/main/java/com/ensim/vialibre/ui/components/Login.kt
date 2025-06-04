@@ -34,9 +34,11 @@ fun Login(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+            .padding(16.dp)
     ) {
+        Titres("Se connecter")
+        Spacer(Modifier.padding(16.dp))
+
         TextField(
             value = email,
             onValueChange = { email = it },
