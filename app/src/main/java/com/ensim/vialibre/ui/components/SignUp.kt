@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -38,17 +39,21 @@ fun SignUp(onSignUpSuccess: () -> Unit) {
         TextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Email") }
+            label = { Text("Email") },
+            textStyle = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = password,
             onValueChange = { password = it },
             label = { Text("Mot de passe") },
-            visualTransformation = PasswordVisualTransformation()
+            visualTransformation = PasswordVisualTransformation(),
+            textStyle = MaterialTheme.typography.bodyMedium
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {
+        ButtonVL(
+            text = "S'inscrire",
+            onClick = {
             authRepository.signUpWithEmail(email, password) { success, error ->
                 if (success) {
                     onSignUpSuccess()
@@ -56,13 +61,11 @@ fun SignUp(onSignUpSuccess: () -> Unit) {
                     errorMessage = error
                 }
             }
-        }) {
-            Text("S'inscrire")
-        }
+        })
 
         errorMessage?.let {
             Spacer(modifier = Modifier.height(8.dp))
-            Text(it, color = Color.Red)
+            Text(it, color = Color.Red, style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

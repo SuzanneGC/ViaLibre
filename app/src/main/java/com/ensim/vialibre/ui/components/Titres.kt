@@ -14,6 +14,6 @@ fun Titres (titre: String){
         text = titre,
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(start = 15.dp, top = 15.dp),
-        fontSize = 35.sp,
+        style = MaterialTheme.typography.titleLarge
     )
 }

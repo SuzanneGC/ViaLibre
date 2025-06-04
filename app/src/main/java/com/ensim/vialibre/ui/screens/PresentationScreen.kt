@@ -1,0 +1,86 @@
+package com.ensim.vialibre.ui.screens
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.ensim.vialibre.PresentationLieu
+import com.ensim.vialibre.R
+import com.ensim.vialibre.ui.components.CustomCard
+import com.ensim.vialibre.ui.components.MapCenteredOnPlace
+import com.ensim.vialibre.ui.components.Titres
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.runtime.State
+
+
+@Composable
+fun PresentationScreen(
+    name: String,
+    address: String,
+    photo: String?,
+    placeId: String?,
+    latLngState: State<LatLng?>,
+    modifier: Modifier
+) {
+
+    LazyColumn(
+        modifier = modifier,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(bottom = 32.dp)
+    ) {
+        item {
+            CustomCard(
+                title = name,
+                description = address,
+                image = photo,
+                placeId = placeId,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight(),
+                targetActivity = PresentationLieu::class.java,
+                clickable = false
+            )
+        }
+
+        item {
+            Divider(
+                color = MaterialTheme.colorScheme.primary,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
+
+        item { Titres(stringResource(id = R.string.titre_presentation_lieu)) }
+
+        item {
+            latLngState.value?.let { latLng ->
+                val cameraPositionState = rememberCameraPositionState {
+                    position = CameraPosition.fromLatLngZoom(latLng, 15f)
+                }
+                MapCenteredOnPlace(latLng = latLng)
+            } ?: Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+    }
+}

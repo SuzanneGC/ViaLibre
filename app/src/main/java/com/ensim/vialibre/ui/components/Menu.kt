@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.ensim.vialibre.MainActivity
+import com.ensim.vialibre.SettingsActivity
 import com.ensim.vialibre.data.model.AuthViewModel
 import kotlin.math.roundToInt
 
@@ -89,14 +90,16 @@ fun Menu(
                     Toast.makeText(context, "Mes avis cliqué", Toast.LENGTH_SHORT).show()
                 }
                 ElementMenu(text = "Paramètres") {
-                    Toast.makeText(context, "Paramètres cliqué", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, SettingsActivity::class.java)
+                    context.startActivity(intent)
                 }
                 ElementMenu(text = "Déconnexion") {
-                    authViewModel.logout() // <- déconnexion ici
+                    authViewModel.logout()
                     onCloseMenu()
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true } // reset back stack
+                    val intent = Intent(context, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                     }
+                    context.startActivity(intent)
                 }
             }
         }

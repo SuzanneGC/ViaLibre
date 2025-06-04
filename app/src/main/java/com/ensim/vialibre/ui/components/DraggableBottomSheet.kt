@@ -113,13 +113,15 @@ fun DraggableBottomSheet(
 
                 if (!hasSearched) {
                     Text("Aucun résultat pour le moment :( Essayez de chercher un lieu !",
-                        color = MaterialTheme.colorScheme.primary)
+                        color = MaterialTheme.colorScheme.primary,
+                        style = MaterialTheme.typography.bodyMedium)
                 } else {
                     if (searchResult != null)
                         CustomCardList(items = searchResult!!)
                     else {
                         Text("Oups, aucun lieu trouvé ! Veuillez réessayer",
-                            color = MaterialTheme.colorScheme.primary)
+                            color = MaterialTheme.colorScheme.primary,
+                            style = MaterialTheme.typography.bodyMedium)
                     }
                 }
 

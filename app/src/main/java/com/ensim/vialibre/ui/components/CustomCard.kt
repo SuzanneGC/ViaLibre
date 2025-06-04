@@ -36,20 +36,23 @@ fun CustomCard(
     image: String?,
     modifier: Modifier = Modifier,
     targetActivity: Class<*>,
-    placeId: String?
+    placeId: String?,
+    clickable: Boolean? = true
 ) {
     val context = LocalContext.current
     Card(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
-                val intent = Intent(context, targetActivity).apply {
-                    putExtra("name", title)
-                    putExtra("address", description)
-                    putExtra("photoRef", image)
-                    putExtra("placeId", placeId)
+                if (clickable == true) {
+                    val intent = Intent(context, targetActivity).apply {
+                        putExtra("name", title)
+                        putExtra("address", description)
+                        putExtra("photoRef", image)
+                        putExtra("placeId", placeId)
+                    }
+                    context.startActivity(intent)
                 }
-                context.startActivity(intent)
             },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -78,7 +81,7 @@ fun CustomCard(
             ) {
                 Text(
                     text = description,
-                    color = MaterialTheme.colorScheme.onSecondary,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
                     style = MaterialTheme.typography.bodyMedium,
                     modifier = Modifier
                         .weight(1f)

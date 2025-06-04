@@ -6,11 +6,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,28 +21,39 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ToggleAndButton(
-    initialToggleState: Boolean = false,
-    onButtonClick: (Boolean) -> Unit
+    numberOfToggles: Int = 1,
+    initialToggleStates: List<Boolean> = List(numberOfToggles) { false },
+    onButtonClick: (List<Boolean>) -> Unit
 ) {
-    var toggleState by remember { mutableStateOf(initialToggleState) }
+    val toggleStates = remember {
+        mutableStateListOf<Boolean>().apply {
+            clear()
+            addAll(initialToggleStates.take(numberOfToggles))
+        }
+    }
 
     Column(
         modifier = Modifier.padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Switch(
-                checked = toggleState,
-                onCheckedChange = { toggleState = it }
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(if (toggleState) "Activé" else "Désactivé")
+        toggleStates.forEachIndexed { index, state ->
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("Toggle ${index + 1}: ${if (state) "Activé" else "Désactivé"}",
+                    modifier = Modifier.weight(1f),
+                    style = MaterialTheme.typography.bodyMedium)
+                Spacer(modifier = Modifier.width(8.dp))
+                Switch(
+                    checked = state,
+                    onCheckedChange = { toggleStates[index] = it }
+                )
+            }
         }
 
-        Button(onClick = {
-            onButtonClick(toggleState)
-        }) {
-            Text("Confirmer")
-        }
+        ButtonVL(
+            onClick = {
+                onButtonClick(toggleStates.toList())
+            },
+            text = "Confirmer"
+        )
     }
 }

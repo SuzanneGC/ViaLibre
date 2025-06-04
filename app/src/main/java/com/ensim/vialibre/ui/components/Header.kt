@@ -2,9 +2,12 @@ package com.ensim.vialibre.ui.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -25,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.R
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 
+/*
 @Composable
 fun HeaderBar(
     onMenuClick: () -> Unit,
@@ -41,9 +45,8 @@ fun HeaderBar(
                     .asPaddingValues()
                     .calculateTopPadding()
             )
-            .background(MaterialTheme.colorScheme.background),
+            .background(MaterialTheme.colorScheme.surfaceVariant),
     ) {
-        // Logo à gauche
         Image(
             painter = logo,
             contentDescription = "Logo",
@@ -53,8 +56,44 @@ fun HeaderBar(
                 .padding(start = 16.dp)
                 .height(40.dp)
         )
+        IconButton(
+            onClick = onMenuClick,
+            modifier = Modifier
+                .align(Alignment.CenterEnd)
+                .padding(end = 16.dp)
+        ) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu",
+                tint = MaterialTheme.colorScheme.primary
+            )
+        }
+    }
+}*/
 
-        // Icône menu à droite
+@Composable
+fun HeaderBar(
+    onMenuClick: () -> Unit,
+    logo: Painter,
+    modifier: Modifier = Modifier
+) {
+    val statusBarHeight = WindowInsets.statusBars.asPaddingValues().calculateTopPadding()
+
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .padding(top = statusBarHeight)
+    ) {
+        Image(
+            painter = logo,
+            contentDescription = "Logo",
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .align(Alignment.Center)
+                .height(40.dp)
+        )
         IconButton(
             onClick = onMenuClick,
             modifier = Modifier
@@ -70,16 +109,5 @@ fun HeaderBar(
     }
 }
 
-
-@Preview(showBackground = true)
-@Composable
-fun HeaderBarPreview() {
-    ViaLibreTheme(darkTheme = true, dynamicColor = false) {
-        HeaderBar(
-            onMenuClick = { /* menu click preview */ },
-            logo = painterResource(id = R.drawable.logovl) // remplace par ton logo
-        )
-    }
-}
 
 

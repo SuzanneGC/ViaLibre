@@ -31,7 +31,8 @@ fun ElementMenu(
         Text(
             text = text,
             color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(start = 10.dp)
+            modifier = Modifier.padding(start = 10.dp),
+            style = MaterialTheme.typography.bodyMedium
         )
     }
     Divider(

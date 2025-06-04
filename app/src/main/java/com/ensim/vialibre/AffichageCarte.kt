@@ -7,13 +7,16 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.internal.enableLiveLiterals
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,11 +24,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.ensim.vialibre.data.model.AuthViewModel
+import com.ensim.vialibre.data.model.SettingsViewModel
+import com.ensim.vialibre.data.model.ThemeViewModel
 import com.ensim.vialibre.data.repository.LieuRepositoryImpl
+import com.ensim.vialibre.data.repository.SettingsRepository
 import com.ensim.vialibre.ui.components.DraggableBottomSheet
 import com.ensim.vialibre.ui.components.HeaderBar
 import com.ensim.vialibre.ui.components.Menu
@@ -64,6 +72,7 @@ class AffichageCarte : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
 
         val apiKey = applicationContext.packageManager.getApplicationInfo(
             packageName,
@@ -90,7 +99,21 @@ class AffichageCarte : ComponentActivity() {
             val navController = rememberNavController()
 
             val context = LocalContext.current
-            ViaLibreTheme(dynamicColor = false) {
+
+            val viewModel: ThemeViewModel = viewModel()
+            val appTheme by viewModel.theme.collectAsState()
+
+
+            val settingsViewModel: SettingsViewModel = viewModel(factory = object : ViewModelProvider.Factory {
+                override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                    val repository = SettingsRepository(applicationContext)
+                    @Suppress("UNCHECKED_CAST")
+                    return SettingsViewModel(repository) as T
+                }
+            })
+            val fontSizeScale by settingsViewModel.fontSizeScale.collectAsState()
+
+            ViaLibreTheme(dynamicColor = false, fontSizeScale = fontSizeScale, appTheme = appTheme) {
                 var isMenuOpen by remember { mutableStateOf(false) }
                 Box(modifier = Modifier.fillMaxSize()) {
 

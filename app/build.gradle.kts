@@ -64,6 +64,8 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.places)
+    implementation(libs.androidx.storage)
+    implementation(libs.androidx.storage)
     //implementation(libs.androidx.navigation.compose.jvmstubs)
     val navVersion = "2.8.9"
     // navigation
@@ -120,6 +122,12 @@ dependencies {
 
     //Base de données
     implementation(libs.firebase.firestore.ktx)
+
+    //Pour la persistance des données
+    implementation(libs.androidx.datastore.preferences)
+
+    implementation(libs.androidx.foundation)
+
 
 
 

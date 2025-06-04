@@ -12,6 +12,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.platform.LocalContext
+import com.ensim.vialibre.ui.accessibility.AppTheme
+import com.ensim.vialibre.ui.accessibility.FontSizeScale
+import com.ensim.vialibre.ui.accessibility.customTypography
 
 private val DarkColorScheme = darkColorScheme(
     background = VioletSombre,
@@ -37,10 +40,10 @@ private val LightColorScheme = lightColorScheme(
     background = VertClair,
 
     primary = VioletFonce,
-    onPrimary = VioletFonce,
+    onPrimary = VioletClair,
 
     secondary = VioletClair,
-    secondaryContainer = VertClair,
+    secondaryContainer = VioletFonce,
     onSecondary = VioletClair,
 
     tertiary = VioletMix,
@@ -55,24 +58,34 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun ViaLibreTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    appTheme: AppTheme,
+    //darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
+    fontSizeScale: FontSizeScale,
     content: @Composable () -> Unit
 ) {
+
+    val isDarkTheme = when (appTheme){
+        AppTheme.LIGHT -> false
+        AppTheme.DARK -> true
+        AppTheme.SYSTEM -> isSystemInDarkTheme()
+    }
+
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+            if (isDarkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
         }
 
-        darkTheme -> DarkColorScheme
+        isDarkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
+        typography = customTypography(fontSizeScale),
         content = content
     )
 }

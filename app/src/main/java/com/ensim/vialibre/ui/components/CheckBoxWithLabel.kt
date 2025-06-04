@@ -52,15 +52,3 @@ fun CheckboxWithLabel(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewCheckboxWithLabel() {
-    var checked by remember { mutableStateOf(false) }
-
-    CheckboxWithLabel(
-        checked = checked,
-        onCheckedChange = { checked = it },
-        label = "Accepter les conditions"
-    )
-}
-

@@ -1,5 +1,6 @@
 package com.ensim.vialibre.ui.components
 
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -28,10 +29,10 @@ fun SearchBar(
     TextField(
         value = query,
         onValueChange = onQueryChange,
-        modifier = modifier,
-                //.fillMaxWidth(),
+        modifier = modifier.defaultMinSize(minHeight = 0.dp),
         shape = RoundedCornerShape(12.dp),
-        placeholder = { Text("Rechercher un lieu") },
+        placeholder = { Text("Rechercher un lieu",
+            style = MaterialTheme.typography.bodyMedium) },
         trailingIcon = {
             IconButton(
                 onClick = { onSearchSubmit(query) })
@@ -45,6 +46,7 @@ fun SearchBar(
         singleLine = true,
         colors = TextFieldDefaults.textFieldColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
+        ),
+        textStyle = MaterialTheme.typography.bodyMedium
     )
 }

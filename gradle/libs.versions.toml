@@ -2,7 +2,9 @@
 accompanistPermissions = "0.34.0-alpha"
 accompanistPermissionsVersion = "0.31.5-rc"
 agp = "8.7.2"
+datastorePreferences = "1.1.7"
 firebaseBomVersion = "33.14.0"
+foundation = "1.8.2"
 googleAccompanistPermissions = "0.31.5"
 googleAccompanistPermissionsVersion = "0.31.5-beta"
 kotlin = "2.0.0"
@@ -24,6 +26,7 @@ playServicesMaps = "19.2.0"
 playServicesMapsVersion = "18.1.0"
 places = "4.3.1"
 navigationComposeJvmstubs = "2.9.0"
+storage = "1.5.0"
 
 [libraries]
 accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissions" }
@@ -31,6 +34,8 @@ accompanist-permissions-v0315 = { module = "com.google.accompanist:accompanist-p
 accompanist-permissions-v0315beta = { module = "com.google.accompanist:accompanist-permissions", version.ref = "googleAccompanistPermissionsVersion" }
 accompanist-permissions-v0315rc = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanistPermissionsVersion" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
+androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
 firebase-auth = { module = "com.google.firebase:firebase-auth" }
 firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx" }
 google-firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBomVersion" }
@@ -58,6 +63,7 @@ play-services-maps = { module = "com.google.android.gms:play-services-maps", ver
 play-services-maps-v1810 = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMapsVersion" }
 places = { group = "com.google.android.libraries.places", name = "places", version.ref = "places" }
 androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "navigation-compose-jvmstubs", version.ref = "navigationComposeJvmstubs" }
+androidx-storage = { group = "androidx.test.services", name = "storage", version.ref = "storage" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

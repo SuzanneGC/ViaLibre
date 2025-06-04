@@ -26,22 +26,11 @@ fun ButtonVL(
         modifier = modifier,
         enabled = enabled,
         colors = ButtonDefaults.buttonColors(
-            containerColor = colorScheme.secondary, // couleur personnalisée
+            containerColor = colorScheme.secondary,
             contentColor = colorScheme.secondaryContainer
         )
     ) {
-        Text(text)
+        Text(text, style = MaterialTheme.typography.bodyMedium)
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewButtonVL() {
-    ViaLibreTheme(darkTheme = true, dynamicColor = false) {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background // ou n’importe quelle couleur
-        )
-        { ButtonVL(text = "Confirmer", onClick = {}, modifier = Modifier.padding(16.dp)) }
-    }
-}

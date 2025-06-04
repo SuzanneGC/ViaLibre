@@ -4,6 +4,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -27,7 +28,7 @@ fun UserMapView(
     when {
         permissionDenied -> {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Permission de localisation refusée")
+                Text("Permission de localisation refusée", style = MaterialTheme.typography.bodyMedium)
             }
         }
         hasLocationPermission && userLocation != null -> {
