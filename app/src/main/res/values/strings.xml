@@ -2,11 +2,20 @@
     <string name="app_name">ViaLibre</string>
     <string name="titre_presentation_lieu">Présentation du lieu</string>
     <string name="dernier_avis_poste">Dernier avis posté</string>
-    <string name="crit1">Adapté aux fauteuils roulants : %1$s</string>
-    <string name="crit2">Bâtiment chauffé l\'hiver : %1$s</string>
     <string name="valider">Valider</string>
     <string name="donner_avis">Donner mon avis</string>
     <string name="changer_avis">Voir les catégories</string>
     <string name="confirmer">Confirmer</string>
     <string name="enregistrer">Valider et retourner en arrière</string>
+
+    <string-array name="liste_criteres_afficher">
+        <item>Adapté aux fauteuils roulants : %1$s</item>
+        <item>Bâtiment chauffé l\'hiver : %1$s</item>
+        <item>Ascenseur disponible : %1$s</item>
+    </string-array>
+
+    <string-array name="liste_criteres_noms">
+        <item>Adapté aux fauteuils roulants</item>
+        <item>Bâtiment chauffé l\'hiver</item>
+    </string-array>
 </resources>

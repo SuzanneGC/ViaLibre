@@ -1,4 +1,4 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.molecules
 
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
@@ -11,8 +11,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ensim.vialibre.PresentationLieu
+import com.ensim.vialibre.PresentationLieuActivity
 import com.ensim.vialibre.domain.Lieu
+import com.ensim.vialibre.ui.components.atoms.CustomCard
 
 @Composable
 fun CustomCardList(
@@ -33,7 +34,7 @@ fun CustomCardList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                targetActivity = PresentationLieu::class.java,
+                targetActivity = PresentationLieuActivity::class.java,
                 placeId = item.placeId,
 
             )

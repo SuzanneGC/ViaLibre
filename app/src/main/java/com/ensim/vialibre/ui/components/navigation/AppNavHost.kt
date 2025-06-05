@@ -1,10 +1,14 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.navigation
 
 import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.ensim.vialibre.ui.screens.HomeScreen
+import com.ensim.vialibre.ui.screens.LoginScreen
+import com.ensim.vialibre.ui.screens.SignUpScreen
+import com.ensim.vialibre.ui.screens.isUserLoggedIn
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
@@ -18,7 +22,7 @@ fun AppNavHost(
         startDestination = if (isUserLoggedIn()) "home" else "login"
     ) {
         composable("login") {
-            Login(onLoginSuccess = {
+            LoginScreen(onLoginSuccess = {
                 navController.navigate("home") {
                     popUpTo("login") { inclusive = true }
                 }
@@ -27,7 +31,7 @@ fun AppNavHost(
                     navController.navigate("signup")
                 })
         }
-        composable("signup") { SignUp(onSignUpSuccess = { navController.navigate("home") }) }
+        composable("signup") { SignUpScreen(onSignUpSuccess = { navController.navigate("home") }) }
         composable("home") {
             HomeScreen(
                 onLogout = {

@@ -1,4 +1,4 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.atoms
 
 import android.content.Context
 import android.content.Intent

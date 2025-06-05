@@ -23,9 +23,9 @@ import com.ensim.vialibre.data.model.AuthViewModel
 import com.ensim.vialibre.data.model.SettingsViewModel
 import com.ensim.vialibre.data.model.ThemeViewModel
 import com.ensim.vialibre.data.repository.SettingsRepository
-import com.ensim.vialibre.ui.components.AppNavHost
-import com.ensim.vialibre.ui.components.HeaderBar
-import com.ensim.vialibre.ui.components.Menu
+import com.ensim.vialibre.ui.components.navigation.AppNavHost
+import com.ensim.vialibre.ui.components.navigation.HeaderBar
+import com.ensim.vialibre.ui.components.molecules.Menu
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 import com.google.firebase.FirebaseApp
 

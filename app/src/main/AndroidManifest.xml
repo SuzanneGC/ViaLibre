@@ -21,7 +21,7 @@
             android:name=".SettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".AffichageCarte"
+            android:name=".AffichageCarteActivity"
             android:exported="false" />
         <activity
             android:name=".MesAvisActivity"
@@ -40,7 +40,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".PresentationLieu" />
+        <activity android:name=".PresentationLieuActivity" />
         <!--
         <meta-data
             android:name="com.google.android.geo.API_KEY"

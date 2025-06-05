@@ -45,10 +45,10 @@ suspend fun getAvisByPlaceId(placeId: String): List<Avis> {
             .get()
             .await()
         val avisList = querySnapshot.documents.mapNotNull { it.toObject(Avis::class.java) }
-        Log.d("PresentationLieu", "Avis récupérés, count = ${avisList.size}")
+        Log.d("PresentationLieuActivity", "Avis récupérés, count = ${avisList.size}")
         avisList
     } catch (e: Exception) {
-        Log.d("PresentationLieu", "problème dans getAvisByPlaceId mon cap'taine : " + e.message)
+        Log.d("PresentationLieuActivity", "problème dans getAvisByPlaceId mon cap'taine : " + e.message)
         e.printStackTrace()
         emptyList()
     }
@@ -135,10 +135,10 @@ suspend fun getAllAvisUser(userId: String): List<Avis> {
             .get()
             .await()
         val avisList = querySnapshot.documents.mapNotNull { it.toObject(Avis::class.java) }
-        Log.d("PresentationLieu", "Avis récupérés, count = ${avisList.size}")
+        Log.d("PresentationLieuActivity", "Avis récupérés, count = ${avisList.size}")
         avisList
     } catch (e: Exception) {
-        Log.d("PresentationLieu", "problème dans getAvisByPlaceId mon cap'taine : " + e.message)
+        Log.d("PresentationLieuActivity", "problème dans getAvisByPlaceId mon cap'taine : " + e.message)
         e.printStackTrace()
         emptyList()
     }

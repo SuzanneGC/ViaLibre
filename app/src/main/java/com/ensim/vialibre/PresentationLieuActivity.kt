@@ -32,15 +32,15 @@ import com.ensim.vialibre.data.repository.Avis
 import com.ensim.vialibre.data.repository.SettingsRepository
 import com.ensim.vialibre.data.repository.getLastAvisById
 import com.ensim.vialibre.data.utils.getLatLngFromPlaceId
-import com.ensim.vialibre.ui.components.HeaderBar
-import com.ensim.vialibre.ui.components.Menu
+import com.ensim.vialibre.ui.components.navigation.HeaderBar
+import com.ensim.vialibre.ui.components.molecules.Menu
 import com.ensim.vialibre.ui.screens.ScreenCarousel
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class PresentationLieu : ComponentActivity() {
+class PresentationLieuActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,7 @@ class PresentationLieu : ComponentActivity() {
 
         val placeId = intent.getStringExtra("placeId")
 
-        val TAG = "PresentationLieu"
+        val TAG = "PresentationLieuActivity"
 
         Log.d(TAG, "placeID initialisé : $placeId")
 

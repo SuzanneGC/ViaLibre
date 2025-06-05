@@ -1,4 +1,4 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.atoms
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

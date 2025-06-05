@@ -16,7 +16,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.internal.enableLiveLiterals
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -34,10 +33,10 @@ import com.ensim.vialibre.data.model.SettingsViewModel
 import com.ensim.vialibre.data.model.ThemeViewModel
 import com.ensim.vialibre.data.repository.LieuRepositoryImpl
 import com.ensim.vialibre.data.repository.SettingsRepository
-import com.ensim.vialibre.ui.components.DraggableBottomSheet
-import com.ensim.vialibre.ui.components.HeaderBar
-import com.ensim.vialibre.ui.components.Menu
-import com.ensim.vialibre.ui.components.UserMapView
+import com.ensim.vialibre.ui.components.molecules.DraggableBottomSheet
+import com.ensim.vialibre.ui.components.navigation.HeaderBar
+import com.ensim.vialibre.ui.components.molecules.Menu
+import com.ensim.vialibre.ui.components.molecules.UserMapView
 import com.ensim.vialibre.ui.theme.ViaLibreTheme
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -47,9 +46,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 
 
-class AffichageCarte : ComponentActivity() {
+class AffichageCarteActivity : ComponentActivity() {
     companion object {
-        const val TAG = "AffichageCarte"
+        const val TAG = "AffichageCarteActivity"
     }
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -140,7 +139,7 @@ class AffichageCarte : ComponentActivity() {
                                 UserMapView(
                                     userLocation = userLocation.value,
                                     hasLocationPermission = ContextCompat.checkSelfPermission(
-                                        this@AffichageCarte,
+                                        this@AffichageCarteActivity,
                                         Manifest.permission.ACCESS_FINE_LOCATION
                                     ) == PackageManager.PERMISSION_GRANTED,
                                     permissionDenied = permissionDenied.value

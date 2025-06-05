@@ -1,12 +1,10 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -20,10 +18,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.ensim.vialibre.ui.components.atoms.ButtonVL
+import com.ensim.vialibre.ui.components.atoms.Titres
+import com.ensim.vialibre.ui.components.molecules.PasswordTextField
 import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun Login(
+fun LoginScreen(
     onLoginSuccess: () -> Unit,
     onNavigateToSignUp: () -> Unit
 ) {
@@ -47,14 +48,13 @@ fun Login(
             isError = error != null && email.isBlank()
         )
         Spacer(modifier = Modifier.height(8.dp))
-        TextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text("Password",
-                style = MaterialTheme.typography.bodyMedium) },
-            visualTransformation = PasswordVisualTransformation(),
-            isError = error != null && email.isBlank()
+
+        PasswordTextField(
+            password = password,
+            onPasswordChange = { password = it },
+            isError = error != null && password.isBlank()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
         ButtonVL(onClick = {
             error = null

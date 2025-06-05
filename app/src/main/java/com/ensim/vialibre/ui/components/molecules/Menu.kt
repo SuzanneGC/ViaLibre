@@ -1,7 +1,6 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.molecules
 
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
@@ -31,6 +30,8 @@ import com.ensim.vialibre.MainActivity
 import com.ensim.vialibre.MesAvisActivity
 import com.ensim.vialibre.SettingsActivity
 import com.ensim.vialibre.data.model.AuthViewModel
+import com.ensim.vialibre.ui.components.atoms.ElementMenu
+import com.ensim.vialibre.ui.components.atoms.Titres
 import kotlin.math.roundToInt
 
 @Composable

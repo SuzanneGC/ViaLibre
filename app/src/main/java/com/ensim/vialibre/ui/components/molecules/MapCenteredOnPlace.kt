@@ -1,4 +1,4 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.molecules
 
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth

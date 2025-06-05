@@ -22,15 +22,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.ensim.vialibre.PresentationLieu
+import com.ensim.vialibre.PresentationLieuActivity
 import com.ensim.vialibre.R
 import com.ensim.vialibre.data.repository.addFavori
 import com.ensim.vialibre.data.repository.isLieuFavori
 import com.ensim.vialibre.data.repository.removeFavori
-import com.ensim.vialibre.ui.components.ButtonVL
-import com.ensim.vialibre.ui.components.CustomCard
-import com.ensim.vialibre.ui.components.MapCenteredOnPlace
-import com.ensim.vialibre.ui.components.Titres
+import com.ensim.vialibre.ui.components.atoms.ButtonVL
+import com.ensim.vialibre.ui.components.atoms.CustomCard
+import com.ensim.vialibre.ui.components.molecules.MapCenteredOnPlace
+import com.ensim.vialibre.ui.components.atoms.Titres
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -60,7 +60,7 @@ fun PresentationScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentHeight(),
-                targetActivity = PresentationLieu::class.java,
+                targetActivity = PresentationLieuActivity::class.java,
                 clickable = false
             )
         }
@@ -80,7 +80,8 @@ fun PresentationScreen(
                 val cameraPositionState = rememberCameraPositionState {
                     position = CameraPosition.fromLatLngZoom(latLng, 15f)
                 }
-                MapCenteredOnPlace(latLng = latLng)
+                MapCenteredOnPlace(latLng = latLng,
+                    lieu = name)
             } ?: Box(
                 modifier = Modifier
                     .fillMaxWidth()

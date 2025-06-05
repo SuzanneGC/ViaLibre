@@ -1,7 +1,5 @@
-package com.ensim.vialibre.ui.components
+package com.ensim.vialibre.ui.components.molecules
 
-import android.graphics.Paint.Align
-import android.location.Location
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
@@ -31,7 +29,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.ensim.vialibre.domain.Lieu
-import com.google.android.gms.maps.model.LatLng
+import com.ensim.vialibre.ui.components.atoms.RoundedBar
+import com.ensim.vialibre.ui.components.atoms.Titres
 import kotlinx.coroutines.launch
 
 @Composable
